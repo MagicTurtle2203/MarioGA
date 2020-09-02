@@ -54,7 +54,7 @@ class Genome:
             weight1_reshaped = weight1.reshape(weight1.shape[0] * weight1.shape[1])
             weight2_reshaped = weight2.reshape(weight2.shape[0] * weight2.shape[1])
 
-            split_point = rng.integers(1, weight1_reshaped.shape[0])
+            split_point = rng.integers(1, weight1_reshaped.shape[0] - 1)
 
             new_weights1.append(
                 np.reshape(
@@ -68,7 +68,7 @@ class Genome:
             )
 
         for bias1, bias2 in zip(parent1.biases, parent2.biases):
-            split_point = rng.integers(1, bias1.shape[0])
+            split_point = rng.integers(1, bias1.shape[0] - 1)
 
             new_biases1.append(np.concatenate((bias1[:split_point], bias2[split_point:])))
             new_biases2.append(np.concatenate((bias2[:split_point], bias1[split_point:])))
