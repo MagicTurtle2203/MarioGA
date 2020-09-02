@@ -54,7 +54,7 @@ class Genome:
             weight1_reshaped = weight1.reshape(weight1.shape[0] * weight1.shape[1])
             weight2_reshaped = weight2.reshape(weight2.shape[0] * weight2.shape[1])
 
-            split_point = rng.randint(1, weight1_reshaped.shape[0])
+            split_point = rng.integers(1, weight1_reshaped.shape[0])
 
             new_weights1.append(
                 np.reshape(
