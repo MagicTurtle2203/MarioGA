@@ -68,7 +68,7 @@ class Genome:
             )
 
         for bias1, bias2 in zip(parent1.biases, parent2.biases):
-            split_point = rng.randint(1, bias1.shape[0])
+            split_point = rng.integers(1, bias1.shape[0])
 
             new_biases1.append(np.concatenate((bias1[:split_point], bias2[split_point:])))
             new_biases2.append(np.concatenate((bias2[:split_point], bias1[split_point:])))
@@ -86,8 +86,8 @@ class Genome:
         return inputs
 
     def mutate(self) -> None:
-        if self.rng.random() < 0.8:
+        if self.rng.random() < 0.3:
             self._mutate_weights()
 
-        if self.rng.random() < 0.8:
+        if self.rng.random() < 0.3:
             self._mutate_biases()
