@@ -68,17 +68,10 @@ class Genome:
             )
 
         for bias1, bias2 in zip(parent1.biases, parent2.biases):
-            bias1_reshaped = bias1.reshape(bias1.shape[0] * bias1.shape[1])
-            bias2_reshaped = bias2.reshape(bias2.shape[0] * bias2.shape[1])
+            split_point = rng.randint(1, bias1.shape[0])
 
-            split_point = rng.randint(1, bias1_reshaped.shape[0])
-
-            new_biases1.append(
-                np.reshape(np.concatenate((bias1_reshaped[:split_point], bias2_reshaped[split_point:])), bias1.shape)
-            )
-            new_biases2.append(
-                np.reshape(np.concatenate((bias2_reshaped[:split_point], bias1_reshaped[split_point:])), bias2.shape)
-            )
+            new_biases1.append(np.concatenate((bias1[:split_point], bias2[split_point:])))
+            new_biases2.append(np.concatenate((bias2[:split_point], bias1[split_point:])))
 
         return (cls(new_weights1, new_biases1), cls(new_weights2, new_biases2))
 
