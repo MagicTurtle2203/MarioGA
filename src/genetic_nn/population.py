@@ -8,10 +8,10 @@ from genetic_nn.config import POPULATION
 
 class Population:
     def __init__(self) -> None:
+        self.rng = np.random.default_rng()
+
         self.genomes: List[Genome] = []
         self.fitnesses: np.ndarray[float] = np.zeros((POPULATION,))
-
-        self.rng = np.random.default_rng()
 
         for _ in range(POPULATION):
             self.genomes.append(Genome())
