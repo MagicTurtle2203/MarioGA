@@ -11,10 +11,28 @@ class Genome:
     def __init__(
         self, weights: Optional[List[np.ndarray[float]]] = None, biases: Optional[List[np.ndarray[float]]] = None
     ) -> None:
+        self.rng = np.random.default_rng()
+
         self.weights: List[np.ndarray[float]] = self._generate_weights() if weights is None else weights
         self.biases: List[np.ndarray[float]] = self._generate_biases() if biases is None else biases
 
-        self.rng = np.random.default_rng()
+    def _generate_weights(self) -> List[np.ndarray[float]]:
+        sizes = (NUM_INPUTS,) + HIDDEN_LAYERS + (NUM_OUTPUTS,)
+
+        return [self.rng.normal(size=(sizes[i], sizes[i - 1])) for i in range(1, len(sizes))]
+
+    def _generate_biases(self) -> List[np.ndarray[float]]:
+        sizes = HIDDEN_LAYERS + (NUM_OUTPUTS,)
+
+        return [self.rng.normal(size=(sizes[i],)) for i in range(len(sizes))]
+
+    def _mutate_weights(self) -> None:
+        for weight in self.weights:
+            weight += self.rng.normal(size=weight.shape)
+
+    def _mutate_biases(self) -> None:
+        for bias in self.biases:
+            bias += self.rng.normal(size=bias.shape)
 
     @classmethod
     def crossover(cls, parent1: Genome, parent2: Genome) -> Tuple[Genome, Genome]:
