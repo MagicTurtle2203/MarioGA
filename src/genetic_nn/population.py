@@ -3,11 +3,7 @@ from typing import Callable, List
 import numpy as np
 
 from genetic_nn.genome import Genome
-
-NUM_INPUTS = 960
-NUM_OUTPUTS = 12
-HIDDEN_LAYERS = (32, 16)
-POPULATION = 20
+from genetic_nn.config import POPULATION
 
 
 class Population:
@@ -18,7 +14,7 @@ class Population:
         self.rng = np.random.default_rng()
 
         for _ in range(POPULATION):
-            self.genomes.append(Genome(NUM_INPUTS, NUM_OUTPUTS, HIDDEN_LAYERS))
+            self.genomes.append(Genome())
 
     def evaluate_population(self, eval_func: Callable[[Genome], float]) -> float:
         self.fitnesses.clear()
