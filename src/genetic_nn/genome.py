@@ -82,7 +82,7 @@ class Genome:
 
         return (cls(new_weights1, new_biases1), cls(new_weights2, new_biases2))
 
-    def evaluate(self, inputs: Union[np.ndarray[np.float64], Sequence[np.float64]]) -> int:
+    def evaluate(self, inputs: Union[np.ndarray[np.float64], Sequence[float]]) -> np.array[np.float64]:
         assert np.array(inputs).shape == (
             NUM_INPUTS,
         ), "Number of inputs given does not match number of inputs specified"
@@ -90,7 +90,7 @@ class Genome:
         for idx, weight in enumerate(self.weights):
             inputs = self._relu((weight @ inputs) + self.biases[idx])
 
-        return np.argmax(inputs)
+        return inputs
 
     def mutate(self) -> None:
         if self.rng.random() < 0.8:
