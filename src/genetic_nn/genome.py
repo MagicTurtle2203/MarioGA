@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
+from typing import List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
@@ -33,6 +33,10 @@ class Genome:
     def _mutate_biases(self) -> None:
         for bias in self.biases:
             bias += self.rng.normal(size=bias.shape)
+
+    @staticmethod
+    def _relu(x: np.ndarray[float]) -> np.ndarray[float]:
+        return np.maximum(x, 0)  # type: ignore
 
     @classmethod
     def crossover(cls, parent1: Genome, parent2: Genome) -> Tuple[Genome, Genome]:
@@ -74,6 +78,16 @@ class Genome:
             )
 
         return (cls(new_weights1, new_biases1), cls(new_weights2, new_biases2))
+
+    def evaluate(self, inputs: Union[np.ndarray[float], Sequence[float]]) -> int:
+        assert np.array(inputs).shape == (
+            NUM_INPUTS,
+        ), "Number of inputs given does not match number of inputs specified"
+
+        for idx, weight in enumerate(self.weights):
+            inputs = self._relu((weight @ inputs) + self.biases[idx])
+
+        return np.argmax(inputs)
 
     def mutate(self) -> None:
         if self.rng.random() < 0.8:
