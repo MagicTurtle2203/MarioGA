@@ -1,3 +1,4 @@
+# type: ignore
 from __future__ import annotations
 
 from typing import List, Optional, Sequence, Tuple, Union
@@ -9,19 +10,21 @@ from genetic_nn.config import NUM_INPUTS, NUM_OUTPUTS, HIDDEN_LAYERS
 
 class Genome:
     def __init__(
-        self, weights: Optional[List[np.ndarray[float]]] = None, biases: Optional[List[np.ndarray[float]]] = None
+        self,
+        weights: Optional[List[np.ndarray[np.float64]]] = None,
+        biases: Optional[List[np.ndarray[np.float64]]] = None,
     ) -> None:
         self.rng = np.random.default_rng()
 
-        self.weights: List[np.ndarray[float]] = self._generate_weights() if weights is None else weights
-        self.biases: List[np.ndarray[float]] = self._generate_biases() if biases is None else biases
+        self.weights: List[np.ndarray[np.float64]] = self._generate_weights() if weights is None else weights
+        self.biases: List[np.ndarray[np.float64]] = self._generate_biases() if biases is None else biases
 
-    def _generate_weights(self) -> List[np.ndarray[float]]:
+    def _generate_weights(self) -> List[np.ndarray[np.float64]]:
         sizes = (NUM_INPUTS,) + HIDDEN_LAYERS + (NUM_OUTPUTS,)
 
         return [self.rng.normal(size=(sizes[i], sizes[i - 1])) for i in range(1, len(sizes))]
 
-    def _generate_biases(self) -> List[np.ndarray[float]]:
+    def _generate_biases(self) -> List[np.ndarray[np.float64]]:
         sizes = HIDDEN_LAYERS + (NUM_OUTPUTS,)
 
         return [self.rng.normal(size=(sizes[i],)) for i in range(len(sizes))]
@@ -35,8 +38,8 @@ class Genome:
             bias += self.rng.normal(size=bias.shape)
 
     @staticmethod
-    def _relu(x: np.ndarray[float]) -> np.ndarray[float]:
-        return np.maximum(x, 0)  # type: ignore
+    def _relu(x: np.ndarray[np.float64]) -> np.ndarray[np.float64]:
+        return np.maximum(x, 0)
 
     @classmethod
     def crossover(cls, parent1: Genome, parent2: Genome) -> Tuple[Genome, Genome]:
@@ -79,7 +82,7 @@ class Genome:
 
         return (cls(new_weights1, new_biases1), cls(new_weights2, new_biases2))
 
-    def evaluate(self, inputs: Union[np.ndarray[float], Sequence[float]]) -> int:
+    def evaluate(self, inputs: Union[np.ndarray[np.float64], Sequence[np.float64]]) -> int:
         assert np.array(inputs).shape == (
             NUM_INPUTS,
         ), "Number of inputs given does not match number of inputs specified"

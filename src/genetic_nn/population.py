@@ -11,7 +11,7 @@ class Population:
         self.rng = np.random.default_rng()
 
         self.genomes: List[Genome] = []
-        self.fitnesses: np.ndarray[float] = np.zeros((POPULATION,))
+        self.fitnesses: np.ndarray[np.float64] = np.zeros((POPULATION,))
 
         for _ in range(POPULATION):
             self.genomes.append(Genome())
@@ -25,7 +25,7 @@ class Population:
         return max(self.fitnesses)
 
     def breed_next_generation(self) -> None:
-        probabilities: np.ndarray[float] = self.fitnesses / self.fitnesses.sum()
+        probabilities: np.ndarray[np.float64] = self.fitnesses / self.fitnesses.sum()
         new_generation: List[Genome] = []
 
         for _ in range(POPULATION // 2):
