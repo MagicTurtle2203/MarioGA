@@ -1,3 +1,4 @@
+# type: ignore
 from typing import Callable, List
 
 import numpy as np
@@ -16,13 +17,13 @@ class Population:
         for _ in range(POPULATION):
             self.genomes.append(Genome())
 
-    def evaluate_population(self, eval_func: Callable[[Genome], float]) -> float:
-        self.fitnesses.clear()
+    def evaluate_population(self, eval_func: Callable[[Genome], float]) -> np.ndarray[np.float64]:
+        self.fitnesses = np.zeros((POPULATION,))
 
         for idx, genome in enumerate(self.genomes):
             self.fitnesses[idx] = eval_func(genome)
 
-        return max(self.fitnesses)
+        return self.fitnesses
 
     def breed_next_generation(self) -> None:
         probabilities: np.ndarray[np.float64] = self.fitnesses / self.fitnesses.sum()
