@@ -29,8 +29,11 @@ class Population:
         new_generation: List[Genome] = []
 
         for _ in range(POPULATION // 2):
-            parent1, parent2 = self.rng.choice(self.genomes, size=2, replace=False, p=probabilities)
-            new_generation.extend(Genome.crossover(parent1, parent2))
+            if self.rng.random() < 0.05:
+                new_generation.extend((Genome(), Genome()))
+            else:
+                parent1, parent2 = self.rng.choice(self.genomes, size=2, replace=False, p=probabilities)
+                new_generation.extend(Genome.crossover(parent1, parent2))
 
         if len(new_generation) < POPULATION:
             new_generation.append(self.rng.choice(self.genomes, size=1, p=probabilities))
