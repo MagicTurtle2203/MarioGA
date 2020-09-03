@@ -141,3 +141,5 @@ share/
 
 # Pycharm
 .idea/
+
+best_models/
