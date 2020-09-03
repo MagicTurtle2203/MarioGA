@@ -30,12 +30,32 @@ class Genome:
         return [self.rng.normal(size=(sizes[i],)) for i in range(len(sizes))]
 
     def _mutate_weights(self) -> None:
-        for weight in self.weights:
-            weight += self.rng.normal(size=weight.shape)
+        # PSM
+        for idx, weight in enumerate(self.weights):
+            weight_reshaped = np.reshape(weight, (weight.shape[0] * weight.shape[1]))
+
+            split_point1, split_point2 = sorted(self.rng.integers(0, weight_reshaped.shape[0], size=2))
+
+            self.weights[idx] = (
+                np.reshape(
+                    np.concatenate(
+                        (
+                            weight_reshaped[:split_point1],
+                            np.flip(weight_reshaped[split_point1:split_point2]),
+                            weight_reshaped[split_point2:],
+                        )
+                    ),
+                    weight.shape,
+                )
+                + self.rng.normal(scale=0.5, size=weight.shape)
+            )
 
     def _mutate_biases(self) -> None:
-        for bias in self.biases:
-            bias += self.rng.normal(size=bias.shape)
+        for idx, bias in enumerate(self.biases):
+            if self.rng.random() < 0.9:
+                self.biases[idx] = bias + self.rng.normal(scale=0.5, size=bias.shape)
+            else:
+                self.biases[idx] = self.rng.normal(size=bias.shape)
 
     @staticmethod
     def _relu(x: np.ndarray[np.float64]) -> np.ndarray[np.float64]:
@@ -86,8 +106,8 @@ class Genome:
         return inputs
 
     def mutate(self) -> None:
-        if self.rng.random() < 0.3:
+        if self.rng.random() < 0.4:
             self._mutate_weights()
 
-        if self.rng.random() < 0.3:
+        if self.rng.random() < 0.4:
             self._mutate_biases()
